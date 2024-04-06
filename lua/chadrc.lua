@@ -1,12 +1,11 @@
+-- This file  needs to have same structure as nvconfig.lua
+-- https://github.com/NvChad/NvChad/blob/v2.5/lua/nvconfig.lua
+
+---@type ChadrcConfig
 local M = {}
-local highlights = require "custom.highlights"
 
 M.ui = {
-  theme = "chadracula",
-  theme_toggle = { "chadracula", "one_light" },
-
-  hl_override = highlights.override,
-  hl_add = highlights.add,
+  theme = "chadracula-evondev",
   statusline = {
     overriden_modules = function(modules)
       table.insert(
@@ -29,9 +28,12 @@ M.ui = {
       "copilot",
     },
   },
+  hl_override = {
+  	Comment = { italic = true },
+  },
+  hl_add = {
+    NvimTreeOpenedFolderName = { fg = "green", bold = true },
+  },
 }
-
-M.plugins = "custom.plugins"
-M.mappings = require "custom.mappings"
 
 return M
