@@ -29,11 +29,6 @@ return {
     },
   },
   {
-    "anuvyklack/fold-preview.nvim",
-    dependencies = "anuvyklack/keymap-amend.nvim",
-    config = true,
-  },
-  {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
