@@ -1,4 +1,14 @@
 return {
+  -- {
+  --   "telescope.nvim",
+  --   config = function()
+  --     require("telescope").setup({
+  --       defaults = {
+  --         file_ignore_patterns = { "node_modules" },
+  --     },
+  --   })
+  --   end,
+  -- },
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
@@ -31,7 +41,6 @@ return {
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
-    event = "InsertEnter",
     config = function()
       require("copilot").setup {
         panel = {
@@ -152,6 +161,7 @@ return {
           typescript = { "eslint_d" },
           javascriptreact = { "eslint_d" },
           typescriptreact = { "eslint_d" },
+          gopls = {"gopls"},
           ruby = { "standardrb" },
         }
 
