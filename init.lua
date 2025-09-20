@@ -12,7 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = require "configs.lazy"
-
+vim.g.NERDTreeShowHidden = 1
 -- load plugins
 require("lazy").setup({
   {

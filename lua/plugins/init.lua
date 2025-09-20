@@ -1,7 +1,24 @@
 return {
+  -- Plugins principais
+  {
+    "mfussenegger/nvim-dap",
+    lazy = true,
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "leoluz/nvim-dap-go",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      require "configs.dap"
+    end,
+  },
+  {
+    "microsoft/vscode-js-debug",
+    lazy = true,
+    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+  },
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
     config = function()
       require "configs.conform"
     end,
@@ -11,6 +28,11 @@ return {
     opts = {
       git = {
         enable = true,
+      },
+      view = {
+        side = "right",
+        width = 30,
+        preserve_window_proportions = true,
       },
       renderer = {
         highlight_git = true,
@@ -29,48 +51,6 @@ return {
     },
   },
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup {
-        panel = {
-          enabled = true,
-          auto_refresh = true,
-          keymap = {
-            jump_prev = "[[",
-            jump_next = "]]",
-            accept = "<CR>",
-            refresh = "gr",
-            open = "<M-CR>",
-          },
-          layout = {
-            position = "bottom", -- | top | left | right
-            ratio = 0.4,
-          },
-        },
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          keymap = {
-            accept = "<C-]>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-N>",
-          },
-        },
-      }
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot_cmp").setup()
-    end,
-  },
-  {
     "neovim/nvim-lspconfig",
     config = function()
       require("nvchad.configs.lspconfig").defaults()
@@ -81,6 +61,7 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     commit = "29be0919b91fb59eca9e90690d76014233392bef",
     config = function()
+      -- CORES CORRIGIDAS (formato hexadecimal válido: 6 ou 8 dígitos)
       local highlight = {
         "RainbowRed",
         "RainbowYellow",
@@ -90,6 +71,7 @@ return {
         "RainbowViolet",
         "RainbowCyan",
       }
+      
       local hooks = require "ibl.hooks"
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
         vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
@@ -102,8 +84,13 @@ return {
       end)
 
       vim.g.rainbow_delimiters = { highlight = highlight }
-      hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
-      require("ibl").setup { scope = { highlight = highlight } }
+      require("ibl").setup {
+        scope = {
+          highlight = highlight,
+          show_start = false,
+          show_end = false,
+        }
+      }
     end,
   },
   {
@@ -117,10 +104,12 @@ return {
         "typescript-language-server",
         "prettier",
         "eslint_d",
+        "dart-debug-adapter",
+        "gopls",
       },
     },
   },
-    {
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
@@ -131,12 +120,13 @@ return {
         "typescript",
         "tsx",
         "c",
+        "go",
         "markdown",
         "markdown_inline",
       },
     },
   },
-{
+  {
     "mfussenegger/nvim-lint",
     event = {
       "BufReadPre",
@@ -144,17 +134,16 @@ return {
     },
     config = function()
       local lint = require "lint"
-
       lint.linters_by_ft = {
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
+        go = {"golangcilint"},
         ruby = { "standardrb" },
       }
 
       local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
         group = lint_augroup,
         callback = function()
@@ -172,32 +161,62 @@ return {
     cmd = "Neoformat",
   },
   {
-    "andrewferrier/debugprint.nvim",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
-  {
     "f-person/git-blame.nvim",
     event = "VeryLazy",
   },
-  {
-    "smoka7/multicursors.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "smoka7/hydra.nvim",
+{
+  "mrbeardad/nvim-multi-cursor",
+  dependencies = { { "folke/flash.nvim", opts = {} } },
+  keys = {
+    -- Adiciona cursores para baixo e para cima
+    {
+      "<C-j>",
+      function()
+        require("nvim-multi-cursor").toggle_cursor_downward()
+      end,
+      mode = { "n" },
+      desc = "Adicionar cursor para baixo",
     },
-    opts = {},
-    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
-    keys = {
-      {
-        mode = { "v", "n" },
-        "<Leader>m",
-        "<cmd>MCstart<cr>",
-        desc = "Create a selection for selected text or word under the cursor",
-      },
+    {
+      "<C-k>",
+      function()
+        require("nvim-multi-cursor").toggle_cursor_upward()
+      end,
+      mode = { "n" },
+      desc = "Adicionar cursor para cima",
+    },
+    -- Atalho para alternar cursor na posição atual (você pode usar <Leader>m aqui)
+    {
+      "<Leader>m",
+      function()
+        require("nvim-multi-cursor").toggle_cursor_at_curpos()
+      end,
+      mode = { "n" },
+      desc = "Alternar cursor na posição atual",
+    },
+    -- Seleção baseada em flash (busca interativa)
+    {
+      "<Leader>ms",
+      function()
+        require("nvim-multi-cursor").toggle_cursor_by_flash()
+      end,
+      mode = { "n" },
+      desc = "Selecionar regiões e alternar cursores (flash)",
+    },
+    -- Seleciona todas as ocorrências da palavra sob o cursor
+    {
+      "<Leader>mw",
+      function()
+        require("nvim-multi-cursor").toggle_cursor_by_flash(vim.fn.expand("<cword>"))
+      end,
+      mode = { "n" },
+      desc = "Selecionar todas as ocorrências da palavra",
     },
   },
+  opts = {
+    hl_group = "IncSearch", -- destaque dos cursores
+  },
+},
   {
     "rhysd/conflict-marker.vim",
     lazy = false,

@@ -1,6 +1,10 @@
 ---@type ChadrcConfig
 local M = {}
 
+M.base46 = {
+  theme = "everforest",
+}
+
 M.ui = {
   statusline = {
     overriden_modules = function(modules)
@@ -25,15 +29,12 @@ M.ui = {
     },
   },
   hl_override = {
-    Comment = { italic = true },
+    Comment = { italic = true},
   },
   hl_add = {
     NvimTreeOpenedFolderName = { fg = "green", bold = true },
   },
 }
 
-M.base46 = {
-  theme = "chadracula-evondev",
-}
 
 return M
