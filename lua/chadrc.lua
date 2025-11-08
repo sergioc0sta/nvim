@@ -2,7 +2,7 @@
 local M = {}
 
 M.base46 = {
-  theme = "everforest",
+  theme = "chadracula-evondev",
 }
 
 M.ui = {

@@ -71,7 +71,7 @@ return {
         "RainbowViolet",
         "RainbowCyan",
       }
-      
+
       local hooks = require "ibl.hooks"
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
         vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
@@ -89,7 +89,7 @@ return {
           highlight = highlight,
           show_start = false,
           show_end = false,
-        }
+        },
       }
     end,
   },
@@ -139,7 +139,7 @@ return {
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
-        go = {"golangcilint"},
+        go = { "golangcilint" },
         ruby = { "standardrb" },
       }
 
@@ -164,61 +164,103 @@ return {
     "f-person/git-blame.nvim",
     event = "VeryLazy",
   },
-{
-  "mrbeardad/nvim-multi-cursor",
-  dependencies = { { "folke/flash.nvim", opts = {} } },
-  keys = {
-    -- Adiciona cursores para baixo e para cima
-    {
-      "<C-j>",
-      function()
-        require("nvim-multi-cursor").toggle_cursor_downward()
-      end,
-      mode = { "n" },
-      desc = "Adicionar cursor para baixo",
+  {
+    "mrbeardad/nvim-multi-cursor",
+    dependencies = { { "folke/flash.nvim", opts = {} } },
+    keys = {
+      -- Adiciona cursores para baixo e para cima
+      {
+        "<C-j>",
+        function()
+          require("nvim-multi-cursor").toggle_cursor_downward()
+        end,
+        mode = { "n" },
+        desc = "Adicionar cursor para baixo",
+      },
+      {
+        "<C-k>",
+        function()
+          require("nvim-multi-cursor").toggle_cursor_upward()
+        end,
+        mode = { "n" },
+        desc = "Adicionar cursor para cima",
+      },
+      -- Atalho para alternar cursor na posição atual (você pode usar <Leader>m aqui)
+      {
+        "<Leader>m",
+        function()
+          require("nvim-multi-cursor").toggle_cursor_at_curpos()
+        end,
+        mode = { "n" },
+        desc = "Alternar cursor na posição atual",
+      },
+      -- Seleção baseada em flash (busca interativa)
+      {
+        "<Leader>ms",
+        function()
+          require("nvim-multi-cursor").toggle_cursor_by_flash()
+        end,
+        mode = { "n" },
+        desc = "Selecionar regiões e alternar cursores (flash)",
+      },
+      -- Seleciona todas as ocorrências da palavra sob o cursor
+      {
+        "<Leader>mw",
+        function()
+          require("nvim-multi-cursor").toggle_cursor_by_flash(vim.fn.expand "<cword>")
+        end,
+        mode = { "n" },
+        desc = "Selecionar todas as ocorrências da palavra",
+      },
     },
-    {
-      "<C-k>",
-      function()
-        require("nvim-multi-cursor").toggle_cursor_upward()
-      end,
-      mode = { "n" },
-      desc = "Adicionar cursor para cima",
-    },
-    -- Atalho para alternar cursor na posição atual (você pode usar <Leader>m aqui)
-    {
-      "<Leader>m",
-      function()
-        require("nvim-multi-cursor").toggle_cursor_at_curpos()
-      end,
-      mode = { "n" },
-      desc = "Alternar cursor na posição atual",
-    },
-    -- Seleção baseada em flash (busca interativa)
-    {
-      "<Leader>ms",
-      function()
-        require("nvim-multi-cursor").toggle_cursor_by_flash()
-      end,
-      mode = { "n" },
-      desc = "Selecionar regiões e alternar cursores (flash)",
-    },
-    -- Seleciona todas as ocorrências da palavra sob o cursor
-    {
-      "<Leader>mw",
-      function()
-        require("nvim-multi-cursor").toggle_cursor_by_flash(vim.fn.expand("<cword>"))
-      end,
-      mode = { "n" },
-      desc = "Selecionar todas as ocorrências da palavra",
+    opts = {
+      hl_group = "IncSearch", -- destaque dos cursores
     },
   },
-  opts = {
-    hl_group = "IncSearch", -- destaque dos cursores
-  },
-},
   {
     "rhysd/conflict-marker.vim",
     lazy = false,
+  },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup {
+        panel = {
+          enabled = true,
+          auto_refresh = true,
+          keymap = {
+            jump_prev = "[[",
+            jump_next = "]]",
+            accept = "<CR>",
+            refresh = "gr",
+            open = "<M-CR>",
+          },
+          layout = {
+            position = "bottom", -- | top | left | right
+            ratio = 0.4,
+          },
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = "<C-y>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-N>",
+          },
+        },
+      }
+    end,
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    config = function()
+      require("copilot_cmp").setup()
+    end,
   },
 }
