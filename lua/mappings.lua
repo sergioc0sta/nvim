@@ -19,4 +19,13 @@ map("n", "<leader>db", "<cmd> lua require'dap'.toggle_breakpoint() <CR>", { desc
 map("n", "<leader>dc", "<cmd> lua require'dap'.continue() <CR>", { desc = "Start or continue the debugger" })
 map("n", "<leader>dr", "<cmd> lua require'dap'.repl.open() <CR>", { desc = "Open debugger REPL" })
 map("n", "<leader>du", "<cmd> lua require'dapui'.toggle() <CR>", { desc = "Toggle debugger UI" })
-map("n", "<leader>td", "<cmd> lua require('dap-go').debug_test() <CR>", { desc = "Debug Go test" })
+map("n", "<leader>tg", "<cmd> lua require('dap-go').debug_test() <CR>", { desc = "Debug Go test" })
+map("n", "<leader>tc", function()
+  local dap = require("dap")
+  local configs = dap.configurations.c or {}
+  if #configs > 0 then
+    dap.run(configs[1])
+  else
+    vim.notify("DAP C/C++ not configured (cpptools missing)", vim.log.levels.WARN)
+  end
+end, { desc = "Debug C/C++ (launch executable)" })

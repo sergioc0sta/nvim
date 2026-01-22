@@ -106,6 +106,7 @@ return {
         "eslint_d",
         "dart-debug-adapter",
         "gopls",
+        "cpptools",
       },
     },
   },
