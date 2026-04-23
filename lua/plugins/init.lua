@@ -97,16 +97,46 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        -- LSP
         "lua-language-server",
-        "stylua",
         "css-lsp",
         "html-lsp",
         "typescript-language-server",
-        "prettier",
-        "eslint_d",
-        "dart-debug-adapter",
+        "tailwindcss-language-server",
+        "vue-language-server",
         "gopls",
+        "clangd",
+        "protols",
+        "rust-analyzer",
+        "intelephense",
+        "sqls",
+        "postgrestools",
+        "zls",
+
+        -- Formatters
+        "stylua",
+        "prettier",
+        "clang-format",
+        "goimports",
+        "shfmt",
+        "black",
+        "isort",
+        "sql-formatter",
+
+        -- Linters
+        "eslint_d",
+        "cpplint",
+        "golangci-lint",
+        "protolint",
+        "standardrb",
+        "shellcheck",
+        "pydocstyle",
+
+        -- DAP
         "cpptools",
+        "delve",
+        "go-debug-adapter",
+        "js-debug-adapter",
       },
     },
   },
