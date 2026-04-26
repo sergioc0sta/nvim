@@ -24,6 +24,7 @@ return {
         "prettier",
         "clang-format",
         "goimports",
+        "gofumpt",
         "shfmt",
         "black",
         "isort",

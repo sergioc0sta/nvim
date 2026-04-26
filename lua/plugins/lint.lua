@@ -18,6 +18,12 @@ return {
             return vim.fn.executable("eslint_d") == 1
           end,
         },
+        golangcilint = {
+          prepend_args = {
+            "--config",
+            "/Users/sco/.config/nvim/.golangci.yml",
+          },
+        },
       },
     },
   },
