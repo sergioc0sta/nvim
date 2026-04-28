@@ -4,12 +4,28 @@
 
 local map = vim.keymap.set
 
+pcall(vim.keymap.del, "n", "<leader>/")
+pcall(vim.keymap.del, "n", "<leader>fb")
+
 map("n", ";", ":", { desc = "Command Mode" })
 map("i", "jk", "<Esc>", { desc = "Escape Insert Mode" })
 
 map("n", "<leader>fr", function()
   LazyVim.format({ force = true })
 end, { desc = "Format" })
+
+map("n", "<leader>fw", function()
+  LazyVim.pick("live_grep")()
+end, { desc = "Grep (Root Dir)" })
+
+map("n", "<leader>fb", function()
+  if Snacks and Snacks.picker and Snacks.picker.lines then
+    Snacks.picker.lines()
+    return
+  end
+
+  require("telescope.builtin").current_buffer_fuzzy_find()
+end, { desc = "Buffer Lines" })
 
 map("n", "<leader>co", "<cmd>Copilot panel<cr>", { desc = "Copilot Panel" })
 map("n", "<leader>w", "<cmd>write<cr>", { desc = "Save File" })
