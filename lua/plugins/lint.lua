@@ -15,7 +15,7 @@ return {
       linters = {
         cpplint = {
           prepend_args = {
-            "--filter=-legal/copyright",
+            "--filter=-legal/copyright,-whitespace/comments",
           },
         },
         eslint_d = {
